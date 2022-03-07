@@ -1,7 +1,7 @@
 {
   "name": "text_speech_mobile",
   "version": "1.0.0",
-  "description": "Send text to a MongoDB Realm app and phone captures the text and converts it in speech",
+  "description": "Send text to a MongoDB Realm app and phone captures the text and converts it to speech",
   "main": "src/main.js",
   "scripts": {
     "start": "node src/main.js"
@@ -10,7 +10,7 @@
   "author": "https://github.com/ProzTock",
   "license": "MIT",
   "dependencies": {
-    "nodemon": "^2.0.15",
+    "prompt-sync": "^4.2.0",
     "realm": "^10.13.0"
   }
 }
