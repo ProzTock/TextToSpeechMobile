@@ -3,6 +3,11 @@ const router = express.Router();
 const Realm = require("realm");
 const Database = require("../module/db.js");
 
+router.get('/is_running', (req, res) => {
+
+    res.send(" [+] Server is running...")
+});
+
 router.post('/login', (req, res) => {
 
     const { realm_app_id, username } = req.body

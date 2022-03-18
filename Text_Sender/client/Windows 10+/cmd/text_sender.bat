@@ -18,6 +18,10 @@ title Send text trought http request to a mongodb database...
 
 	echo.
 
+	goto :checkJSONfile
+
+	goto :isServerRunning %~1
+
 	call:login %~1
 
 	goto :eof
@@ -32,8 +36,47 @@ title Send text trought http request to a mongodb database...
 	echo ::: ##:::: ##:::::::: ##:. ##::::: ##:::::::'##::: ##: ##::::::: ##:. ###: ##:::: ##: ##::::::: ##::. ##::
 	echo ::: ##:::: ########: ##:::. ##:::: ##:::::::. ######:: ########: ##::. ##: ########:: ########: ##:::. ##:
 
-
 	goto :eof
+
+:checkJSONfile
+
+	dir /B | findstr data.json 2> nul > nul
+
+	if not exist data.json (
+
+		echo. [-] Error, data.json file has not been found in this folder, please download it from:
+		echo. https://github.com/ProzTock/TextToSpeechMobile/blob/main/Text_Sender/client/Windows%2010%2B/cmd/data.json
+
+		echo.
+
+		pause
+
+		exit /b
+	)
+
+:isServerRunning
+
+	set url_server=%~1%/is_running
+
+	curl -X GET %url_server% -o result.txt 2> nul > nul
+
+	if  %errorlevel% equ 1 (
+
+		echo. [-] Error, your server { %~1 } is not running, please check it...
+
+		echo.
+
+		pause
+
+		exit /b
+
+	) else (
+	
+		type result.txt
+	
+		echo.
+		echo.
+	)
 
 :login
 
@@ -82,7 +125,7 @@ title Send text trought http request to a mongodb database...
 
 		echo.
 		
-		if "%message%"=="exit" (
+		if /i "%message%"=="exit" (
 
 			echo -------------------------------
 
@@ -144,3 +187,5 @@ title Send text trought http request to a mongodb database...
 call:main
 
 pause
+
+exit
