@@ -1,7 +1,9 @@
 @echo off
-title Send text trought http request to a mongodb database...
+title Sends text through http requests to a mongodb database for being listened...
 
 :main
+
+	cls
 
 	mode con cols=120 lines=30
 
@@ -17,6 +19,13 @@ title Send text trought http request to a mongodb database...
 	echo.Welcome to the text sender client for Windows on CMD...
 
 	echo.
+
+	if "%~1%"=="" (
+		
+		echo. [-] Error, please give your server url...
+
+		exit /b
+	)
 
 	goto :checkJSONfile
 
@@ -40,30 +49,31 @@ title Send text trought http request to a mongodb database...
 
 :checkJSONfile
 
-	dir /B | findstr data.json 2> nul > nul
-
 	if not exist data.json (
 
-		echo. [-] Error, data.json file has not been found in this folder, please download it from:
-		echo. https://github.com/ProzTock/TextToSpeechMobile/blob/main/Text_Sender/client/Windows%2010%2B/cmd/data.json
+		curl -X GET https://raw.githubusercontent.com/ProzTock/TextToSpeechMobile/main/Text_Sender/client/data.json -o data.json 2> nul > nul
 
+		echo. [*] File data.json has been donwloaded, please check and put your own data in this file located in the current folder,
+		echo. 	  after that you can continue, if you don't put your data in data.json file will appear errors...
+		echo.
+
+		echo. If you're done with your data in the data.json file, you can continue...
 		echo.
 
 		pause
 
-		exit /b
+		echo.
 	)
 
 :isServerRunning
 
-	set url_server=%~1%/is_running
+	set server=%~1%/is_running
 
-	curl -X GET %url_server% -o result.txt 2> nul > nul
+	curl -X GET %server% -o result.txt 2> nul > nul
 
 	if  %errorlevel% equ 1 (
 
-		echo. [-] Error, your server { %~1 } is not running, please check it...
-
+		echo. [-] Error, your server url entered { %~1 } is not running, please check it...
 		echo.
 
 		pause
@@ -73,7 +83,6 @@ title Send text trought http request to a mongodb database...
 	) else (
 	
 		type result.txt
-	
 		echo.
 		echo.
 	)
@@ -83,11 +92,9 @@ title Send text trought http request to a mongodb database...
 	set url_login=%~1%/login
 
 	echo -------------------------------
-
 	echo.
 
 	echo. [+] Logging in to the server...
-
 	echo.
 
 	curl -X POST %url_login% -H "Content-Type: application/json" -d @data.json -o result.txt 2> nul > nul
@@ -102,7 +109,6 @@ title Send text trought http request to a mongodb database...
 	if %errorlevel% equ 0 (
 
 		echo. [-] Error, try again...
-
 		echo.
 
 	) else (
@@ -118,7 +124,6 @@ title Send text trought http request to a mongodb database...
 	:loop
 
 		echo -------------------------------
-
 		echo.
 
 		set /p message=" [?] What's your message?: -> " 
@@ -138,7 +143,6 @@ title Send text trought http request to a mongodb database...
 			curl -X POST %url_sendmesg% -H "Content-Type: application/json" -d "{ \"message\": \"%message%\" }" -o result.txt 2> nul > nul
 
 			type result.txt
-
 			echo.
 			echo.
 
@@ -147,7 +151,6 @@ title Send text trought http request to a mongodb database...
 			if %errorlevel% equ 0 (
 
 				echo. [-] Error, try again...
-
 				echo.
 
 				goto :eof
