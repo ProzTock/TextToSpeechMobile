@@ -1,2 +1,3 @@
 Text_Sender/server/node_modules
 Text_Sender/server/mongodb-realm
+Text_Sender/server/.env

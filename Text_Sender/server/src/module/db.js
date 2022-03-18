@@ -1,4 +1,4 @@
-export default class Database{
+class Database{
 
     static instance;
     user_instance;
@@ -6,9 +6,7 @@ export default class Database{
 
     constructor(user_instance, realm_instance){
 
-        console.log(Database.instance)
-
-        if(!! Database.instance){
+        if(!!Database.instance){
             return Database.instance;
         }
 
@@ -18,9 +16,8 @@ export default class Database{
     }
 
     deleteInstance(){
-
         Database.instance = undefined;
-        //this.user_instance = undefined;
-        //this.realm_instance = undefined;
     }
 }
+
+module.exports = Database;
